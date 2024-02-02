@@ -24,3 +24,25 @@ func CreatePost(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": post})
 }
+
+func FindPosts(c *gin.Context) {
+	var posts []models.Post
+
+
+	models.DB.Find(&posts)
+
+	c.JSON(http.StatusOK, gin.H{"data": posts})
+}
+
+func FindPost(c * gin.Context) {
+	var post []models.Post
+
+	if err := models.DB.Where("id = ?", c.Param("id")).First(&post).Error; err != nil {
+        c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+        return
+    }
+
+	models.DB.Find(&post)
+
+	c.JSON(http.StatusOK, gin.H{"data": post})
+}
